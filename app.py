@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, render_template_string
+import os
+from flask import Flask, jsonify, render_template_string, send_from_directory
 
 app = Flask(__name__)
 
@@ -67,17 +68,20 @@ HTML_TEMPLATE = """
         function render() {
             if (currentStep === 'team_entry') {
                 appDiv.innerHTML = `
-                    <div class="brutalist-border p-8 bg-white mb-8">
-                        <h1 class="text-4xl font-black uppercase tracking-tighter mb-2">Vybe 2K26</h1>
-                        <h2 class="text-2xl font-bold uppercase border-b-4 border-black pb-4 mb-4">Quiz Arena</h2>
-                        <input type="text" id="teamName" placeholder="ENTER TEAM NAME" class="w-full border-4 border-black p-4 mb-4 text-xl outline-none focus:bg-gray-100">
+                    <div class="brutalist-border p-8 bg-white mb-8 text-center">
+                        <div class="flex flex-col items-center gap-4 mb-6 border-b-4 border-black pb-6">
+                            <img src="/kle_logo.png" alt="KLE Logo" class="h-16 object-contain">
+                            <img src="/vybe_logo.png" alt="Vybe Logo" class="h-16 object-contain">
+                        </div>
+                        <h2 class="text-3xl font-black uppercase mb-6">Quiz Arena</h2>
+                        <input type="text" id="teamName" placeholder="ENTER TEAM NAME" class="w-full border-4 border-black p-4 mb-4 text-xl outline-none focus:bg-gray-100 font-bold uppercase">
                         <button onclick="startQuiz()" class="brutalist-btn w-full p-4 text-xl">Start // Register Team</button>
                     </div>
                 `;
             } else if (currentStep === 'choose_difficulty') {
                 appDiv.innerHTML = `
                     <div class="brutalist-border p-8 bg-white mb-8">
-                        <h2 class="text-2xl font-black uppercase mb-6">Select Difficulty</h2>
+                        <h2 class="text-2xl font-black uppercase mb-6 text-center">Select Difficulty</h2>
                         <div class="grid grid-cols-1 gap-4">
                             <button onclick="fetchQuestions('easy')" class="brutalist-btn p-4 text-lg bg-green-400">Easy (5 Pts)</button>
                             <button onclick="fetchQuestions('moderate')" class="brutalist-btn p-4 text-lg bg-yellow-400">Moderate (10 Pts)</button>
@@ -159,6 +163,12 @@ def home():
 def get_questions(level):
     return jsonify(QUESTIONS.get(level, []))
 
-# Only run this locally; Vercel handles serving differently
+# This route securely serves your logos so the HTML can display them
+@app.route('/<path:filename>')
+def serve_static(filename):
+    if filename in ['kle_logo.png', 'vybe_logo.png']:
+        return send_from_directory(os.path.dirname(os.path.abspath(__file__)), filename)
+    return "File not found", 404
+
 if __name__ == '__main__':
     app.run(debug=True)
