@@ -1,5 +1,4 @@
-import os
-from flask import Flask, jsonify, render_template_string, send_from_directory
+from flask import Flask, jsonify, render_template_string
 
 app = Flask(__name__)
 
@@ -207,9 +206,9 @@ HTML_TEMPLATE = """
                 appDiv.innerHTML = `
                     <div class="brutalist-card p-8 mb-8 text-center">
                         <div class="flex flex-col sm:flex-row justify-center items-center gap-8 mb-8 border-b-4 border-black pb-8">
-                            <img src="/kle_logo.png" alt="KLE Logo" class="h-20 object-contain hover:scale-110 transition-transform">
+                            <img src="https://raw.githubusercontent.com/yuvanshankerk-jpg/quiz-arena-vercel/main/kle_logo.png" alt="KLE Logo" class="h-20 object-contain hover:scale-110 transition-transform">
                             <h1 class="text-4xl font-black">X</h1>
-                            <img src="/vybe_logo.png" alt="Vybe Logo" class="h-16 object-contain hover:scale-110 transition-transform">
+                            <img src="https://raw.githubusercontent.com/yuvanshankerk-jpg/quiz-arena-vercel/main/vybe_logo.png" alt="Vybe Logo" class="h-16 object-contain hover:scale-110 transition-transform">
                         </div>
                         <h2 class="text-5xl font-black uppercase mb-2 tracking-tighter" style="text-shadow: 2px 2px 0px var(--brand-cyan);">Quiz Arena</h2>
                         <p class="mb-8 font-bold text-gray-600 uppercase">Offline Kiosk Console</p>
@@ -332,8 +331,5 @@ def home():
 def get_questions(level):
     return jsonify(QUESTIONS.get(level, []))
 
-# Serves the static logos uploaded to the GitHub root
-@app.route('/<path:filename>')
-def serve_static(filename):
-    if filename in ['kle_logo.png', 'vybe_logo.png']:
-        return send_from_directory(os.path.dirname(os.path.abspath(__file__
+if __name__ == '__main__':
+    app.run(debug=True)
